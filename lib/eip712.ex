@@ -21,6 +21,10 @@ defmodule Eip712 do
       iex> message = ~s({"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Person":[{"name":"name","type":"string"},{"name":"wallet","type":"address"}],"Mail":[{"name":"from","type":"Person"},{"name":"to","type":"Person"},{"name":"contents","type":"string"}]},"primaryType":"Mail","domain":{"name":"Ether Mail","version":"1","chainId":"0x01","verifyingContract":"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"},"message":{"from":{"name":"Cow","wallet":"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826"},"to":{"name":"Bob","wallet":"0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB"},"contents":"Hello, Bob!"}})
       iex> Eip712.encode(message)
       {:ok, "0xbe609aee343fb3c4b28e1df9e632fca64fcfaede20f02e86244efddf30957bd2"}
+
+      iex> message = ~s({"types":{"EIP712Domain":[{"type":"string","name":"name"},{"type":"string","name":"version"},{"type":"uint256","name":"chainId"}],"ReplyTo":[{"type":"string","name":"news_url"}],"Comment":[{"type":"string","name":"content"},{"type":"string","name":"author_address"},{"type":"string","name":"author_chain"},{"type":"ReplyTo","name":"reply_to"}]},"primaryType":"Comment","message":{"reply_to":{"news_url":"https://www.nytimes.com/2023/01/12/us/school-shootings-security.html#commentsContainer"},"content":"It is simply insane that we are turning our schools into prison-like fortresses because we can't overcome the obsessive lobbying of gun fetishists. The adults in this country have left the room.","author_chain":"ETHEREUM","author_address":"0x70997970c51812dc3a010c7d01b50e0d17dc79c8"},"domain":{"version":"1","name":"Stela","chainId":"0x7A69"}})
+      iex> Eip712.encode(message)
+      {:ok, "0xd955b7f563f2a50d22bec114e00e2295fc4e9ba90bb34868e6b79a0e8991c7f3"}
   """
   @spec encode(String.t()) :: {:ok, String.t()} | {:error, binary()}
   def encode(_message), do: :erlang.nif_error(:nif_not_loaded)
