@@ -9,6 +9,8 @@ defmodule Eip712 do
 
   @doc """
   Encode typed data as described in `Eip712`.
+  The type of `uint256` must be passed in as hex string prefixed by `0x`, for example, `chainId` must
+  be passed as `"chainId":"0x01"` in the message rather than `"chainId":1`
 
   ## Examples
 
@@ -16,6 +18,9 @@ defmodule Eip712 do
       iex> Eip712.encode(message)
       {:ok, "0xac03eeb19f3eb9939d33ebc5e59c9f89cd215100a8035c658c8016f6170cfa85"}
 
+      iex> message = ~s({"types":{"EIP712Domain":[{"name":"name","type":"string"},{"name":"version","type":"string"},{"name":"chainId","type":"uint256"},{"name":"verifyingContract","type":"address"}],"Person":[{"name":"name","type":"string"},{"name":"wallet","type":"address"}],"Mail":[{"name":"from","type":"Person"},{"name":"to","type":"Person"},{"name":"contents","type":"string"}]},"primaryType":"Mail","domain":{"name":"Ether Mail","version":"1","chainId":"0x01","verifyingContract":"0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC"},"message":{"from":{"name":"Cow","wallet":"0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826"},"to":{"name":"Bob","wallet":"0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB"},"contents":"Hello, Bob!"}})
+      iex> Eip712.encode(message)
+      {:ok, "0xbe609aee343fb3c4b28e1df9e632fca64fcfaede20f02e86244efddf30957bd2"}
   """
   @spec encode(String.t()) :: {:ok, String.t()} | {:error, binary()}
   def encode(_message), do: :erlang.nif_error(:nif_not_loaded)
